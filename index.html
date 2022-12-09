@@ -4,10 +4,45 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <title>Battleships</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div class="container grid-container"></div>
+    <div class="container button-row">
+      <button id="start">Start the game</button>
+      <button id="rotate">Rotate your ships</button>
+    </div>
+    <div class="container">
+      <div class="ships">
+        <div class="ship destroyer-container">
+          <div class="destroyer-0"></div>
+          <div class="destroyer-1"></div>
+        </div>
+        <div class="ship submarine-container">
+          <div class="submarine-0"></div>
+          <div class="submarine-1"></div>
+          <div class="submarine-2"></div>
+        </div>
+        <div class="ship cruiser-container">
+          <div class="cruiser-0"></div>
+          <div class="cruiser-1"></div>
+          <div class="cruiser-2"></div>
+        </div>
+        <div class="ship battleship-container">
+          <div class="battleship-0"></div>
+          <div class="battleship-1"></div>
+          <div class="battleship-2"></div>
+          <div class="battleship-3"></div>
+        </div>
+        <div class="ship carrier-container">
+          <div class="carrier-0"></div>
+          <div class="carrier-1"></div>
+          <div class="carrier-2"></div>
+          <div class="carrier-3"></div>
+          <div class="carrier-4"></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
