@@ -9,6 +9,7 @@ export class Ship {
   type: ShipType;
   length: number;
   isHorizontal: boolean = true;
+  hits: number = 0;
 
   constructor(type: ShipType) {
     this.type = type;
@@ -28,6 +29,16 @@ export class Ship {
         this.length = 5;
         break;
     }
+  }
+
+  hit(): void {
+    if (this.hits < this.length) {
+      this.hits += 1;
+    }
+  }
+
+  get isSunken(): boolean {
+    return this.hits === this.length;
   }
 }
 
