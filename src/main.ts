@@ -13,3 +13,5 @@ computerGrid.createBoard();
 rotateButton.addEventListener("click", () => {
   playerGrid.shipsToBePlaced.forEach((ship) => ship.rotate());
 });
+
+playerGrid.addListeners();

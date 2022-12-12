@@ -1,4 +1,5 @@
-import { PlayerShip, shipNames, ShipType } from "./ship";
+import { PlayerShip, ShipType } from "./ship";
+import { gridChars, shipNames } from "./utils";
 
 export type Position = `${string}-${number}`;
 type PossibleValue = "" | "hit" | "miss" | ShipType;
@@ -14,7 +15,6 @@ abstract class Grid {
     this.type = type;
 
     // Create the Grid State
-    const gridChars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
     for (let i = 0; i < gridChars.length; i++) {
       for (let j = 1; j <= 10; j++) {
         const position: Position = `${gridChars[i]}-${j}`;
@@ -46,6 +46,8 @@ abstract class Grid {
 
 export class PlayerGrid extends Grid {
   shipsToBePlaced: PlayerShip[] = [];
+  selectedShipPart: number = 0;
+  selectedShip: PlayerShip | null = null;
   // shipsToBePlaced: PlayerShip[];
   constructor() {
     super("player");
@@ -55,6 +57,27 @@ export class PlayerGrid extends Grid {
     // this.shipsToBePlaced = shipNames.map(
     //   (shipName) => new PlayerShip(shipName)
     // );
+  }
+
+  addListeners(): void {
+    this.shipsToBePlaced.forEach((ship) => {
+      ship.element.draggable = true;
+      ship.element.addEventListener("mousedown", (event) => {
+        const target = event.target as HTMLElement;
+        this.selectedShipPart = parseInt(target.id.split("-")[1]);
+        // get the id from the target
+        // const id = target.id;
+        // exxtract the number from it
+        // const numberString = id.split("-")[1];
+        // convert it to a number type
+        // const number = parseInt(numberString);
+      });
+
+      ship.element.addEventListener("dragstart", () => {
+        this.selectedShip = ship;
+        console.log(this.selectedShip);
+      });
+    });
   }
 }
 

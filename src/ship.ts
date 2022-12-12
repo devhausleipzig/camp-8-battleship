@@ -5,14 +5,6 @@ export type ShipType =
   | "battleship"
   | "carrier";
 
-export const shipNames: ShipType[] = [
-  "destroyer",
-  "submarine",
-  "cruiser",
-  "battleship",
-  "carrier",
-];
-
 export class Ship {
   type: ShipType;
   length: number;
