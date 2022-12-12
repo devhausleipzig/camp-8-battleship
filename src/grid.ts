@@ -1,5 +1,5 @@
-import { PlayerShip, ShipType } from "./ship";
-import { gridChars, shipNames } from "./utils";
+import { PlayerShip, Ship, ShipType } from "./ship";
+import { gridChars, makePositionFromId, shipNames } from "./utils";
 
 export type Position = `${string}-${number}`;
 type PossibleValue = "" | "hit" | "miss" | ShipType;
@@ -8,6 +8,7 @@ type GridState = Record<Position, PossibleValue>;
 abstract class Grid {
   state: GridState = {};
   type: "player" | "computer";
+  ships: Ship[] = [];
   element: HTMLElement;
   squares: HTMLElement[] = [];
 
@@ -27,6 +28,28 @@ abstract class Grid {
     this.element.id = this.type === "player" ? "player-grid" : "computer-grid";
     const container = document.querySelector(".grid-container") as HTMLElement;
     container.appendChild(this.element);
+  }
+
+  set(position: Position, value: PossibleValue): void {
+    this.state[position] = value;
+  }
+
+  get(position: Position): PossibleValue {
+    return this.state[position];
+  }
+
+  isTaken(positions: Position[]): boolean {
+    return positions.some((position) => this.get(position));
+  }
+
+  drawShip(positions: Position[], shipType: ShipType): void {
+    positions.forEach((position) => {
+      const square = this.squares.find(
+        (sq) => sq.id === `${this.type}-${position}`
+      );
+      // const square = document.getElementById(`${this.type}-${position}`);
+      square?.classList.add(shipType);
+    });
   }
 
   createBoard(): void {
@@ -60,6 +83,7 @@ export class PlayerGrid extends Grid {
   }
 
   addListeners(): void {
+    // Ship Listeners
     this.shipsToBePlaced.forEach((ship) => {
       ship.element.draggable = true;
       ship.element.addEventListener("mousedown", (event) => {
@@ -75,9 +99,52 @@ export class PlayerGrid extends Grid {
 
       ship.element.addEventListener("dragstart", () => {
         this.selectedShip = ship;
-        console.log(this.selectedShip);
       });
     });
+
+    // Grid Listeners
+    this.element.addEventListener("dragover", (event) =>
+      event.preventDefault()
+    );
+    this.element.addEventListener("drop", (event) => {
+      const target = event.target as HTMLElement;
+      const position = makePositionFromId(target.id);
+      if (this.selectedShip) {
+        this.placeShip(this.selectedShip, this.selectedShipPart, position);
+      }
+    });
+  }
+
+  placeShip(ship: PlayerShip, shipPart: number, position: Position): void {
+    const shipSquares: Position[] = [];
+    const positionChar = position.split("-")[0];
+    const positionNumber = parseInt(position.split("-")[1]);
+
+    if (ship.isHorizontal) {
+      for (let i = 0; i < ship.length; i++) {
+        const number = positionNumber + i - shipPart;
+        if (number > 10 || number < 1) {
+          return;
+        }
+        shipSquares.push(`${positionChar}-${number}`);
+      }
+    } else {
+      for (let i = 0; i < ship.length; i++) {
+        const charIndex = gridChars.indexOf(positionChar);
+        const char = gridChars[charIndex + i - shipPart];
+        if (!char) {
+          return;
+        }
+        shipSquares.push(`${char}-${positionNumber}`);
+      }
+    }
+
+    const isTaken = this.isTaken(shipSquares);
+
+    if (!isTaken) {
+      shipSquares.forEach((square) => this.set(square, ship.type));
+      this.drawShip(shipSquares, ship.type);
+    }
   }
 }
 
