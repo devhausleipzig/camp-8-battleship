@@ -61,4 +61,10 @@ function fire(event: Event) {
 
   computerGrid.takeShot(square);
   playerTurn += 1;
+
+  setTimeout(() => {
+    const randomSquare = playerGrid.randomFire();
+    playerGrid.takeShot(randomSquare);
+    computerTurn += 1;
+  }, Math.random() * (3000 - 500) + 500);
 }

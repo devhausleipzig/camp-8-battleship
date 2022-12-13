@@ -52,13 +52,43 @@ abstract class Grid {
     return Object.keys(this.state) as Position[];
   }
 
-  drawShip(positions: Position[], shipType: ShipType): void {
-    positions.forEach((position) => {
+  drawShip(positions: Position[], ship: Ship): void {
+    positions.forEach((position, idx, array) => {
       const square = this.squares.find(
         (sq) => sq.id === `${this.type}-${position}`
       );
       // const square = document.getElementById(`${this.type}-${position}`);
-      square?.classList.add(shipType);
+      square?.classList.add(ship.type);
+
+      if (ship.isHorizontal) {
+        if (idx === 0) {
+          if (square) {
+            square.style.borderTopLeftRadius = "9999px";
+            square.style.borderBottomLeftRadius = "9999px";
+          }
+        }
+
+        if (idx === array.length - 1) {
+          if (square) {
+            square.style.borderTopRightRadius = "9999px";
+            square.style.borderBottomRightRadius = "9999px";
+          }
+        }
+      } else {
+        if (idx === 0) {
+          if (square) {
+            square.style.borderTopLeftRadius = "9999px";
+            square.style.borderTopRightRadius = "9999px";
+          }
+        }
+
+        if (idx === array.length - 1) {
+          if (square) {
+            square.style.borderBottomLeftRadius = "9999px";
+            square.style.borderBottomRightRadius = "9999px";
+          }
+        }
+      }
     });
   }
 
@@ -166,7 +196,7 @@ abstract class Grid {
     }
 
     shipSquares.forEach((square) => this.set(square, ship.type));
-    this.drawShip(shipSquares, ship.type);
+    this.drawShip(shipSquares, ship);
   }
 }
 
@@ -246,7 +276,7 @@ export class PlayerGrid extends Grid {
 
     if (!isTaken) {
       shipSquares.forEach((square) => this.set(square, ship.type));
-      this.drawShip(shipSquares, ship.type);
+      this.drawShip(shipSquares, ship);
       this.ships.push(ship);
       this.shipsToBePlaced = this.shipsToBePlaced.filter((s) => s !== ship);
       ship.element.remove();
@@ -260,6 +290,20 @@ export class PlayerGrid extends Grid {
       this.shipsToBePlaced = this.shipsToBePlaced.filter((s) => s !== ship);
       ship.element.remove();
     });
+  }
+
+  randomFire(): HTMLElement {
+    let squareValue: PossibleValue;
+    let randomPosition = getRandomElementFromArray(this.positionArray);
+    squareValue = this.get(randomPosition);
+
+    while (squareValue === "hit" || squareValue === "miss") {
+      randomPosition = getRandomElementFromArray(this.positionArray);
+      squareValue = this.get(randomPosition);
+    }
+    return document.getElementById(
+      `${this.type}-${randomPosition}`
+    ) as HTMLElement;
   }
 }
 

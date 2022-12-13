@@ -53,6 +53,7 @@
   width: calc(4.6vmin * var(--width, 1));
   height: calc(4.6vmin * var(--height, 1));
   margin: 1vmin;
+  border-radius: 9999px;
 }
 
 .ship > div {
@@ -109,6 +110,11 @@
 .destroyer {
   background-color: var(--destroyer-color);
 }
+
+.destroyer {
+  background-color: var(--destroyer-color);
+}
+
 .submarine {
   background-color: var(--submarine-color);
 }
