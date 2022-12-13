@@ -1,10 +1,11 @@
 import "./style.css";
 import { PlayerGrid, ComputerGrid } from "./grid";
 import { makePositionFromId } from "./utils";
-
 const startButton = document.getElementById("start") as HTMLElement;
 const rotateButton = document.getElementById("rotate") as HTMLElement;
 const randomizeButton = document.getElementById("random") as HTMLElement;
+const message = document.getElementById("message") as HTMLElement;
+
 let playerTurn = 1;
 let computerTurn = 1;
 
@@ -31,9 +32,11 @@ computerGrid.ships.forEach((ship) => {
 
 startButton.addEventListener("click", () => {
   if (playerGrid.shipsToBePlaced.length > 0) {
-    alert("You need to place all of your ships to start the game!");
+    message.innerHTML =
+      "You need to place all of your ships to start the game!";
     return;
   }
+  message.innerHTML = "Game has started";
 
   computerGrid.element.addEventListener("click", fire);
 });
@@ -48,12 +51,12 @@ function fire(event: Event) {
   }
 
   if (squareValue === "hit" || squareValue === "miss") {
-    alert("You already fired at this square, pick another one!");
+    message.innerHTML = "You already fired at this square, pick another one!";
     return;
   }
 
   if (!playerGrid.ships.length || !computerGrid.ships.length) {
-    alert("Game over!");
+    message.innerHTML = "Game over!";
     return;
   }
 
@@ -66,5 +69,5 @@ function fire(event: Event) {
     const randomSquare = playerGrid.randomFire();
     playerGrid.takeShot(randomSquare);
     computerTurn += 1;
-  }, Math.random() * (3000 - 500) + 500);
+  }, Math.random() * (1500 - 500) + 500);
 }

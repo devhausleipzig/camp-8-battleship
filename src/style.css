@@ -16,6 +16,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-block: 1rem;
 }
 
 .button-row {
@@ -141,4 +142,34 @@
 }
 .miss::after {
   background-color: white;
+}
+
+.miss::before,
+.boom::before {
+  content: "";
+  position: absolute;
+  animation: hit 0.2s ease-out forwards;
+  border-radius: 100%;
+  width: 2vmin;
+  height: 2vmin;
+}
+.miss::before {
+  border: 0.2vmin solid white;
+}
+.boom::before {
+  border: 0.2vmin solid red;
+}
+
+@keyframes hit {
+  0% {
+    opacity: 1;
+    transform: scale(0);
+  }
+  95% {
+    opacity: 0;
+    transform: scale(4);
+  }
+  100% {
+    transform: scale(0);
+  }
 }

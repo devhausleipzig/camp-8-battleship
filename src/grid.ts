@@ -17,9 +17,11 @@ abstract class Grid {
   ships: Ship[] = [];
   element: HTMLElement;
   squares: HTMLElement[] = [];
+  messageElement: HTMLElement;
 
   constructor(type: "player" | "computer") {
     this.type = type;
+    this.messageElement = document.getElementById("message") as HTMLElement;
 
     // Create the Grid State
     for (let i = 0; i < gridChars.length; i++) {
@@ -120,11 +122,11 @@ abstract class Grid {
       this.set(position, "hit");
 
       if (hitShip.isSunken) {
-        console.log(`${hitShip.type} is destroyed`);
+        this.messageElement.innerHTML = `${hitShip.type} is destroyed`;
         this.rmeoveShip(hitShip);
 
         if (!this.ships.length) {
-          alert(`${currentPlayer} won the game!`);
+          this.messageElement.innerHTML = `${currentPlayer} won the game!`;
           return;
         }
       }
